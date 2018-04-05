@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { Image, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 
 export default class ScalableImage extends React.Component {
@@ -20,15 +20,19 @@ export default class ScalableImage extends React.Component {
     componentDidMount() {
         this.mounted = true;
         this.onProps(this.props);
+        Dimensions.addEventListener("change", this.handler);
     }
 
     componentWillUnmount() {
         this.mounted = false;
+        Dimensions.removeEventListener("change", this.handler);
     }
 
     componentWillReceiveProps(nextProps) {
         this.onProps(nextProps);
     }
+    
+    handler = dims => this.setState(dims);
 
     onProps(props) {
         if (props.source.uri) {
